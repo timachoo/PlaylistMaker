@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,25 +14,42 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val btnSearch = findViewById<LinearLayout>(R.id.search_btn) as Button
+        val btnSearch = findViewById<Button>(R.id.search_btn)
 
-        val imageClickListener: View.OnClickListener = object : View.OnClickListener {
+        /*val imageClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
                 Toast.makeText(this@MainActivity, "Нажали на кнопку Поиск!", Toast.LENGTH_SHORT).show()
             }
         }
-        btnSearch.setOnClickListener(imageClickListener)
+        btnSearch.setOnClickListener(imageClickListener)*/
 
-        val btnLibrary = findViewById<ImageView>(R.id.library_btn) as Button
+        btnSearch.setOnClickListener{
+            val displayIntent = Intent(this, SearchActivity::class.java)
+            startActivity(displayIntent)
+        }
 
+        val btnLibrary = findViewById<Button>(R.id.library_btn)
+
+        /*
         btnLibrary.setOnClickListener {
             Toast.makeText(this@MainActivity, "Нажали на кнопку Медиатека!", Toast.LENGTH_SHORT).show()
         }
+        */
 
-        val btnSettings = findViewById<ImageView>(R.id.settings_btn) as Button
+        btnLibrary.setOnClickListener {
+            val displayIntent = Intent(this, LibraryActivity::class.java)
+            startActivity(displayIntent)
+        }
+
+        val btnSettings = findViewById<Button>(R.id.settings_btn)
+
+        /*btnSettings.setOnClickListener {
+            Toast.makeText(this@MainActivity, "Нажали на кнопку Настройки!", Toast.LENGTH_SHORT).show()
+        }*/
 
         btnSettings.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Нажали на кнопку Настройки!", Toast.LENGTH_SHORT).show()
+            val displayIntent = Intent(this, SettingsActivity::class.java)
+            startActivity(displayIntent)
         }
     }
 }
