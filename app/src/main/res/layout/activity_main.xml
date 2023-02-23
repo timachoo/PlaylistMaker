@@ -39,6 +39,7 @@
             android:textColor="@color/text_color"
             android:textSize="@dimen/content_caption_size"
             android:textAllCaps="false"
+            android:foreground="?attr/selectableItemBackground"
             />
 
         <Button
@@ -56,6 +57,7 @@
             android:textColor="@color/text_color"
             android:textSize="@dimen/content_caption_size"
             android:textAllCaps="false"
+            android:foreground="?attr/selectableItemBackground"
             />
 
         <Button
@@ -73,6 +75,7 @@
             android:textColor="@color/text_color"
             android:textSize="@dimen/content_caption_size"
             android:textAllCaps="false"
+            android:foreground="?attr/selectableItemBackground"
             />
     </LinearLayout>
 
