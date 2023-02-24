@@ -8,33 +8,13 @@
     android:fontFamily="@string/app_font_family"
     android:padding="@dimen/header_padding">
 
-    <FrameLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/settings_back_btn"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/menu_layout_width">
-
-        <FrameLayout
-            android:id="@+id/settings_back_btn"
-            android:layout_width="@dimen/icon_width"
-            android:layout_height="match_parent"
-            android:foreground="?attr/selectableItemBackground">
-
-            <ImageView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:src="@drawable/arrow_back"
-               android:layout_gravity="center_vertical"/>
-        </FrameLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="@string/settings"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/header_text_size"
-            android:gravity="center"
-            android:layout_marginLeft="@dimen/header_icon_padding"/>
-
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        app:title="@string/settings"
+        app:titleTextColor="@color/text_color"
+        app:navigationIcon="@drawable/arrow_back"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -75,18 +55,11 @@
                 android:textSize="@dimen/text_size"
                 android:gravity="center"/>
 
-            <FrameLayout
-                android:layout_width="@dimen/icon_width"
+            <ImageView
+                android:layout_width="@dimen/share_icon_width"
                 android:layout_height="match_parent"
-                android:layout_gravity="end">
-
-                <ImageView
-                    android:layout_width="@dimen/share_icon_width"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/share"
-                    android:layout_gravity="center" />
-            </FrameLayout>
-
+                android:src="@drawable/share"
+                android:layout_gravity="end" />
         </FrameLayout>
 
         <FrameLayout
