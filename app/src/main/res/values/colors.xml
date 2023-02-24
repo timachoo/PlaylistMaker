@@ -17,5 +17,5 @@
 
     <!-- Icon -->
     <color name="icon_color">#1A1B22</color>
-
+    <color name="icon_default_color">#AEAFB4</color>
 </resources>
