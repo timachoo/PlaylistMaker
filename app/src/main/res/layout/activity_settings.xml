@@ -56,7 +56,7 @@
                 android:gravity="center"/>
 
             <ImageView
-                android:layout_width="@dimen/share_icon_width"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/share"
                 android:layout_gravity="end" />
@@ -75,44 +75,11 @@
                 android:textSize="@dimen/text_size"
                 android:gravity="center"/>
 
-            <FrameLayout
-                android:layout_width="@dimen/icon_width"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="end">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/icon_height"
-                    android:layout_gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/support_handsfree"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/support_hair"
-                        android:paddingLeft="4dp"
-                        android:paddingTop="3dp"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/support_eye1"
-                        android:paddingLeft="6dp"
-                        android:paddingTop="9dp"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/support_eye2"
-                        android:paddingLeft="12dp"
-                        android:paddingTop="9dp"/>
-                </FrameLayout>
-
-            </FrameLayout>
+                android:src="@drawable/support"
+                android:layout_gravity="end" />
 
         </FrameLayout>
 
@@ -129,17 +96,12 @@
                 android:textSize="@dimen/text_size"
                 android:gravity="center"/>
 
-            <FrameLayout
-                android:layout_width="@dimen/icon_width"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="end">
+                android:src="@drawable/arrow_forward"
+                android:layout_gravity="end" />
 
-                <ImageView
-                    android:layout_width="@dimen/ua_icon_width"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/arrow_forward"
-                    android:layout_gravity="center" />
-            </FrameLayout>
 
         </FrameLayout>
 
