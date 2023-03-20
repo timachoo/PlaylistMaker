@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/background_blue"
     android:padding="@dimen/header_padding"
-    android:fontFamily="@string/app_font_family">
+    android:fontFamily="@font/ys_display_medium">
 
     <TextView
         android:layout_width="wrap_content"
