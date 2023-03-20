@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:fontFamily="@string/app_font_family"
     android:padding="@dimen/header_padding">
 
     <androidx.appcompat.widget.Toolbar
@@ -20,6 +19,7 @@
         android:layout_marginTop="@dimen/content_margin">
 
         <FrameLayout
+            android:id="@+id/settings_theme"
             style="@style/SettingsMenuFrameStyle">
 
             <TextView
@@ -27,11 +27,14 @@
                 android:text="@string/black_theme"/>
 
             <Switch
+                android:id="@+id/settings_theme_switch"
+                android:theme="@style/SCBSwitch"
                 style="@style/SettingsMenuImgStyle"/>
 
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/settings_share"
             style="@style/SettingsMenuFrameStyle">
 
             <TextView
@@ -44,6 +47,7 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/settings_support"
             style="@style/SettingsMenuFrameStyle">
 
             <TextView
@@ -57,6 +61,7 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/settings_agreement"
             style="@style/SettingsMenuFrameStyle">
 
             <TextView
