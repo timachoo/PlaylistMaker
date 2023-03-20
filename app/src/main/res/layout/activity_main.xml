@@ -26,56 +26,23 @@
 
         <Button
             android:id="@+id/search_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            app:cornerRadius="@dimen/button_corner_radius"
+            style="@style/MainBtnStyle"
             app:icon="@drawable/search"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/icon_padding"
-            app:iconTint="@color/icon_color"
             android:text="@string/search"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/content_caption_size"
-            android:textAllCaps="false"
-            android:foreground="?attr/selectableItemBackground"
             />
 
         <Button
             android:id="@+id/library_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            app:cornerRadius="@dimen/button_corner_radius"
+            style="@style/MainBtnStyle"
             app:icon="@drawable/library"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/icon_padding"
-            app:iconTint="@color/icon_color"
             android:text="@string/library"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/content_caption_size"
-            android:textAllCaps="false"
-            android:foreground="?attr/selectableItemBackground"
             />
 
         <Button
             android:id="@+id/settings_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            app:cornerRadius="@dimen/button_corner_radius"
+            style="@style/MainBtnStyle"
             app:icon="@drawable/settings"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/icon_padding"
-            app:iconTint="@color/icon_color"
             android:text="@string/settings"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/content_caption_size"
-            android:textAllCaps="false"
-            android:foreground="?attr/selectableItemBackground"
             />
     </LinearLayout>
 

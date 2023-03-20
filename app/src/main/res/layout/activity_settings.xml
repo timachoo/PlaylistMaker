@@ -10,10 +10,8 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/settings_back_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/ToolbarStyle"
         app:title="@string/settings"
-        app:titleTextColor="@color/text_color"
         app:navigationIcon="@drawable/arrow_back"/>
 
     <LinearLayout
@@ -23,84 +21,52 @@
         android:layout_marginTop="@dimen/content_margin">
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/menu_layout_width">
+            style="@style/SettingsMenuFrameStyle">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:text="@string/black_theme"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size"
-                android:gravity="center" />
+                style="@style/SettingsMenuTextStyle"
+                android:text="@string/black_theme"/>
 
             <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"/>
+                style="@style/SettingsMenuImgStyle"/>
 
         </FrameLayout>
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/menu_layout_width">
+            style="@style/SettingsMenuFrameStyle">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:text="@string/share"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size"
-                android:gravity="center"/>
+                style="@style/SettingsMenuTextStyle"
+                android:text="@string/share"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/share"
-                android:layout_gravity="end" />
+                style="@style/SettingsMenuImgStyle"
+                android:src="@drawable/share"/>
         </FrameLayout>
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/menu_layout_width">
+            style="@style/SettingsMenuFrameStyle">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:text="@string/support"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size"
-                android:gravity="center"/>
+                style="@style/SettingsMenuTextStyle"
+                android:text="@string/support" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/support"
-                android:layout_gravity="end" />
+                style="@style/SettingsMenuImgStyle"
+                android:src="@drawable/support"/>
 
         </FrameLayout>
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/menu_layout_width">
+            style="@style/SettingsMenuFrameStyle">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:text="@string/user_agreement"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size"
-                android:gravity="center"/>
+                style="@style/SettingsMenuTextStyle"
+                android:text="@string/user_agreement"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/arrow_forward"
-                android:layout_gravity="end" />
+                style="@style/SettingsMenuImgStyle"
+                android:src="@drawable/arrow_forward"/>
 
 
         </FrameLayout>
