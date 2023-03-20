@@ -49,7 +49,7 @@ class SettingsActivity : AppCompatActivity() {
         btnSupport.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SENDTO)
             shareIntent.data = Uri.parse("mailto:")
-            shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("test@tchoo.ru"))
+            shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(resources.getString(R.string.developer_email)))
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.default_theme))
             shareIntent.putExtra(Intent.EXTRA_TEXT, resources.getString(R.string.default_message))
             if (intent.resolveActivity(getPackageManager()) != null) {
