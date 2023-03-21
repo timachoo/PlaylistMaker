@@ -7,11 +7,13 @@
     <dimen name="header_icon_padding">28dp</dimen>
     <dimen name="content_margin">16dp</dimen>
     <dimen name="menu_layout_width">60dp</dimen>
+    <dimen name="search_padding">40dp</dimen>
 
     <!-- Text -->
     <dimen name="header_text_size">22sp</dimen>
     <dimen name="text_size">16dp</dimen>
     <dimen name="content_caption_size">22sp</dimen>
+    <dimen name="search_height">36dp</dimen>
 
     <!-- Button Settings -->
     <dimen name="button_corner_radius">16dp</dimen>

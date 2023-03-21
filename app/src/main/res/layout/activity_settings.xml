@@ -4,16 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_white"
-    android:fontFamily="@string/app_font_family"
     android:padding="@dimen/header_padding">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/settings_back_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/ToolbarStyle"
         app:title="@string/settings"
-        app:titleTextColor="@color/text_color"
         app:navigationIcon="@drawable/arrow_back"/>
 
     <LinearLayout
@@ -23,19 +19,21 @@
         android:layout_marginTop="@dimen/content_margin">
 
         <FrameLayout
+            android:id="@+id/settings_theme"
             android:layout_width="match_parent"
             android:layout_height="@dimen/menu_layout_width">
 
             <TextView
+                style="@style/SettingsMenuTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:text="@string/black_theme"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size"
-                android:gravity="center" />
+                android:gravity="center"
+                android:text="@string/black_theme"/>
 
             <Switch
+                android:id="@+id/settings_theme_switch"
+                android:theme="@style/SCBSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"/>
@@ -43,64 +41,64 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/settings_share"
             android:layout_width="match_parent"
             android:layout_height="@dimen/menu_layout_width">
 
             <TextView
+                style="@style/SettingsMenuTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:text="@string/share"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:text="@string/share"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/share"
-                android:layout_gravity="end" />
+                android:layout_gravity="end"
+                android:src="@drawable/share"/>
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/settings_support"
             android:layout_width="match_parent"
             android:layout_height="@dimen/menu_layout_width">
 
             <TextView
+                style="@style/SettingsMenuTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:text="@string/support"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:text="@string/support" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/support"
-                android:layout_gravity="end" />
+                android:layout_gravity="end"
+                android:src="@drawable/support"/>
 
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/settings_agreement"
             android:layout_width="match_parent"
             android:layout_height="@dimen/menu_layout_width">
 
             <TextView
+                style="@style/SettingsMenuTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:text="@string/user_agreement"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:text="@string/user_agreement"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/arrow_forward"
-                android:layout_gravity="end" />
+                android:layout_gravity="end"
+                android:src="@drawable/arrow_forward"/>
 
 
         </FrameLayout>
