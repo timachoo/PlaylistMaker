@@ -22,16 +22,8 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
     fun bind(track: Track) {
-        if (track.trackName.length > 23)
-            trackName.text = track.trackName.substring(1,20) + "..."
-        else
-            trackName.text = track.trackName
-
-        if (track.artistName.length > 23)
-            artistName.text = track.artistName.substring(1,20) + "..."
-        else
-            artistName.text = track.artistName
-
+        trackName.text = track.trackName
+        artistName.text = track.artistName
         artistName.text = track.artistName
         trackTime.text = track.trackTime
         Glide.with(itemView).load(track.artworkUrl100)
