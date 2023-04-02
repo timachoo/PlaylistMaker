@@ -41,17 +41,17 @@
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/artistName"
+                style="@style/AddFont"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:gravity="center_vertical"
                 tools:text="The Beatles"
                 android:layout_gravity="start"
-                android:textSize="11sp"
-                android:textColor="?attr/colorOnPrimary"
                 android:maxLines="1"
                 android:ellipsize="end"/>
             <ImageView
+                style="@style/AddFont"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
                 android:src="@drawable/ellipse"
@@ -59,14 +59,13 @@
                 android:layout_gravity="center_vertical"/>
             <TextView
                 android:id="@+id/trackTime"
+                style="@style/AddFont"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:gravity="center_vertical"
                 tools:text="5:00"
-                android:layout_gravity="start"
-                android:textSize="11sp"
-                android:textColor="?attr/colorOnPrimary"/>
+                android:layout_gravity="start"/>
         </LinearLayout>
     </LinearLayout>
    <ImageView
