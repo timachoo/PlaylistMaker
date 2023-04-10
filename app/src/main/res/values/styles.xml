@@ -28,4 +28,9 @@
         <item name="colorSwitchThumbNormal">@color/disable_thumb_gray</item>
         <item name="android:colorForeground">@color/thumb_foreground</item>
     </style>
+    <style name="AddFont">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:tint">@color/gray</item>
+    </style>
 </resources>
