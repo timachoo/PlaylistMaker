@@ -8,10 +8,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -37,22 +34,23 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var inputEditText: EditText
     private lateinit var recyclerView: RecyclerView
-    private lateinit var noDataFound: LinearLayout
-    private lateinit var connectError: LinearLayout
+    private lateinit var statusLayout: LinearLayout
+    private lateinit var statusImage: ImageView
+    private lateinit var statusCaption: TextView
+    private lateinit var statusAddText: TextView
     private lateinit var btnReload: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        noDataFound = findViewById<LinearLayout>(R.id.nodatafound)
-        connectError = findViewById<LinearLayout>(R.id.connect_error)
-
+        statusLayout = findViewById<LinearLayout>(R.id.status)
+        statusImage = findViewById<ImageView>(R.id.status_img)
+        statusCaption = findViewById<TextView>(R.id.status_caption)
+        statusAddText = findViewById<TextView>(R.id.status_add_text)
         btnReload = findViewById<Button>(R.id.reload_btn)
 
         btnReload.setOnClickListener {
-            if (tempText.isNotEmpty()) {
-                inputEditText.setText(tempText)
-            }
+            iTunesSearch()
         }
 
         inputEditText = findViewById<EditText>(R.id.search_edit_text)
@@ -94,34 +92,8 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (inputEditText.text.isNotEmpty()){
-                    iTunesService.search(inputEditText.text.toString()).enqueue(object :
-                        Callback<TrackResponce> {
-                        override fun onResponse(call: Call<TrackResponce>,
-                                                response: Response<TrackResponce>
-                        ) {
-                            if (response.code() == 200) {
-                                trackList.clear()
-                                if (response.body()?.results?.isNotEmpty() == true) {
-                                    trackList.addAll(response.body()?.results!!)
-                                    adapter.notifyDataSetChanged()
-                                }
-                                if (trackList.isEmpty()) {
-                                    noDataFoundVisible()
-                                } else {
-                                    recyclerVisible()
-                                }
-                            } else {
-                                errorVisible()
-                            }
-                        }
-
-                        override fun onFailure(call: Call<TrackResponce>, t: Throwable) {
-                            errorVisible()
-                        }
-
-                    })
-                }
+                iTunesSearch()
+                true
             }
             false
         }
@@ -130,30 +102,67 @@ class SearchActivity : AppCompatActivity() {
         if (s.isNullOrEmpty()) {
             trackList.clear()
             adapter.notifyDataSetChanged()
-            recyclerVisible()
+            viewSearchResult(TrackSearchStatus.Success)
             return View.GONE
         } else {
             return View.VISIBLE
         }
     }
-    private fun recyclerVisible(){
-        connectError.visibility = View.GONE
-        noDataFound.visibility = View.GONE
-        recyclerView.visibility = View.VISIBLE
+
+    private fun viewSearchResult(status : TrackSearchStatus) {
+        when (status) {
+            TrackSearchStatus.Success -> {
+                statusLayout.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
+            TrackSearchStatus.NoDataFound -> {
+                statusLayout.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+                statusImage.setImageResource(R.drawable.nodatafound)
+                statusAddText.visibility = View.GONE
+                btnReload.visibility = View.GONE
+                statusCaption.setText(R.string.no_data_found)
+            }
+            TrackSearchStatus.ConnectionError -> {
+                statusLayout.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+                statusImage.setImageResource(R.drawable.connect_error)
+                statusAddText.visibility = View.VISIBLE
+                btnReload.visibility = View.VISIBLE
+                statusCaption.setText(R.string.connect_err)
+            }
+        }
     }
 
-    private fun noDataFoundVisible(){
-        connectError.visibility = View.GONE
-        noDataFound.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
-    }
+    private fun iTunesSearch(){
+        if (inputEditText.text.isNotEmpty()){
+            iTunesService.search(inputEditText.text.toString()).enqueue(object :
+                Callback<TrackResponce> {
+                override fun onResponse(call: Call<TrackResponce>,
+                                        response: Response<TrackResponce>
+                ) {
+                    if (response.code() == 200) {
+                        trackList.clear()
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            trackList.addAll(response.body()?.results!!)
+                            adapter.notifyDataSetChanged()
+                        }
+                        if (trackList.isEmpty()) {
+                            viewSearchResult(TrackSearchStatus.NoDataFound)
+                        } else {
+                            viewSearchResult(TrackSearchStatus.Success)
+                        }
+                    } else {
+                        viewSearchResult(TrackSearchStatus.ConnectionError)
+                    }
+                }
 
-    private fun errorVisible(){
-        connectError.visibility = View.VISIBLE
-        noDataFound.visibility = View.GONE
-        recyclerView.visibility = View.GONE
-        tempText = inputEditText.text.toString()
-        inputEditText.text.clear()
+                override fun onFailure(call: Call<TrackResponce>, t: Throwable) {
+                    viewSearchResult(TrackSearchStatus.ConnectionError)
+                }
+
+            })
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
