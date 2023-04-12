@@ -39,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var noDataFound: LinearLayout
     private lateinit var connectError: LinearLayout
+    private lateinit var btnReload: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
         noDataFound = findViewById<LinearLayout>(R.id.nodatafound)
         connectError = findViewById<LinearLayout>(R.id.connect_error)
 
-        val btnReload = findViewById<Button>(R.id.reload_btn)
+        btnReload = findViewById<Button>(R.id.reload_btn)
 
         btnReload.setOnClickListener {
             if (tempText.isNotEmpty()) {
