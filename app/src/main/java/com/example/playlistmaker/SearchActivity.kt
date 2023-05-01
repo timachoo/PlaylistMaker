@@ -1,26 +1,57 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
     }
+    private val iTunesBaseUrl = "https://itunes.apple.com"
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(iTunesBaseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    private val iTunesService = retrofit.create(iTunesAPI::class.java)
+    private val trackList = ArrayList<Track>()
+    private val adapter = TrackAdapter()
+    private var tempText = ""
+
     private lateinit var inputEditText: EditText
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var statusLayout: LinearLayout
+    private lateinit var statusImage: ImageView
+    private lateinit var statusCaption: TextView
+    private lateinit var statusAddText: TextView
+    private lateinit var btnReload: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        statusLayout = findViewById<LinearLayout>(R.id.status)
+        statusImage = findViewById<ImageView>(R.id.status_img)
+        statusCaption = findViewById<TextView>(R.id.status_caption)
+        statusAddText = findViewById<TextView>(R.id.status_add_text)
+        btnReload = findViewById<Button>(R.id.reload_btn)
+
+        btnReload.setOnClickListener {
+            iTunesSearch()
+        }
 
         inputEditText = findViewById<EditText>(R.id.search_edit_text)
         if (savedInstanceState != null) {
@@ -55,25 +86,82 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
+        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        adapter.trackList = trackList
+        recyclerView.adapter = adapter
 
-        val trackList = listOf<Track>(
-            Track("Smells Like Teen Spirit", "Nirvana", "5:01", "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg")
-            , Track("Billie Jean", "Michael Jackson", "4:35","https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg" )
-            , Track("Stayin' Alive", "Bee Gees", "4:10", "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg")
-            , Track("Whole Lotta Love", "Led Zeppelin", "5:33", "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg")
-            , Track("Sweet Child O'Mine", "Guns N' Roses", "5:03", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg")
-        )
-
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        val trackAdapter = TrackAdapter(trackList)
-        recyclerView.adapter = trackAdapter
-
+        inputEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                iTunesSearch()
+                true
+            }
+            false
+        }
     }
     private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
+        if (s.isNullOrEmpty()) {
+            trackList.clear()
+            adapter.notifyDataSetChanged()
+            viewSearchResult(TrackSearchStatus.Success)
+            return View.GONE
         } else {
-            View.VISIBLE
+            return View.VISIBLE
+        }
+    }
+
+    private fun viewSearchResult(status : TrackSearchStatus) {
+        when (status) {
+            TrackSearchStatus.Success -> {
+                statusLayout.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
+            TrackSearchStatus.NoDataFound -> {
+                statusLayout.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+                statusImage.setImageResource(R.drawable.nodatafound)
+                statusAddText.visibility = View.GONE
+                btnReload.visibility = View.GONE
+                statusCaption.setText(R.string.no_data_found)
+            }
+            TrackSearchStatus.ConnectionError -> {
+                statusLayout.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+                statusImage.setImageResource(R.drawable.connect_error)
+                statusAddText.visibility = View.VISIBLE
+                btnReload.visibility = View.VISIBLE
+                statusCaption.setText(R.string.connect_err)
+            }
+        }
+    }
+
+    private fun iTunesSearch(){
+        if (inputEditText.text.isNotEmpty()){
+            iTunesService.search(inputEditText.text.toString()).enqueue(object :
+                Callback<TrackResponce> {
+                override fun onResponse(call: Call<TrackResponce>,
+                                        response: Response<TrackResponce>
+                ) {
+                    if (response.code() == 200) {
+                        trackList.clear()
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            trackList.addAll(response.body()?.results!!)
+                            adapter.notifyDataSetChanged()
+                        }
+                        if (trackList.isEmpty()) {
+                            viewSearchResult(TrackSearchStatus.NoDataFound)
+                        } else {
+                            viewSearchResult(TrackSearchStatus.Success)
+                        }
+                    } else {
+                        viewSearchResult(TrackSearchStatus.ConnectionError)
+                    }
+                }
+
+                override fun onFailure(call: Call<TrackResponce>, t: Throwable) {
+                    viewSearchResult(TrackSearchStatus.ConnectionError)
+                }
+
+            })
         }
     }
 
