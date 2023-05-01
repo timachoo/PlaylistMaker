@@ -9,17 +9,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        val btnSettingsTheme = findViewById<Switch>(R.id.settings_theme_switch)
-
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            btnSettingsTheme.setChecked(true);
-        }
 
         val btnSettingsBack = findViewById<View>(R.id.settings_back_btn)
 
@@ -27,12 +22,14 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        btnSettingsTheme.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+
+        if ((applicationContext as App).darkTheme) {
+            themeSwitcher.setChecked(true);
+        }
+
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
         }
 
         val btnShare = findViewById<View>(R.id.settings_share)

@@ -27,6 +27,9 @@
         <item name="colorControlActivated">@color/enable_thumb_green</item>
         <item name="colorSwitchThumbNormal">@color/disable_thumb_gray</item>
         <item name="android:colorForeground">@color/thumb_foreground</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
     <style name="AddFont">
         <item name="android:textColor">@color/gray</item>
