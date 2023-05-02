@@ -6,12 +6,15 @@ import androidx.appcompat.app.AppCompatDelegate
 
 class App : Application() {
     var darkTheme = false
-    lateinit var sharedPrefs : SharedPreferences
-
+    companion object {
+        const val DARK_THEME = "key_for_dark_theme"
+        const val APPLICATION_PREFERENCES = "application_preferences"
+        lateinit var applicationPrefs : SharedPreferences
+    }
     override fun onCreate() {
         super.onCreate()
-        sharedPrefs = getSharedPreferences(APPLICATION_PREFERENCES, MODE_PRIVATE)
-        darkTheme = sharedPrefs.getBoolean(DARK_THEME, false)
+        applicationPrefs = getSharedPreferences(APPLICATION_PREFERENCES, MODE_PRIVATE)
+        darkTheme = applicationPrefs.getBoolean(DARK_THEME, false)
         switchTheme(darkTheme)
     }
 
@@ -24,14 +27,8 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        sharedPrefs.edit()
+        applicationPrefs.edit()
             .putBoolean(DARK_THEME, darkTheme)
             .apply()
-    }
-
-    companion object {
-        const val DARK_THEME = "key_for_dark_theme"
-        const val APPLICATION_PREFERENCES = "application_preferences"
-
     }
 }

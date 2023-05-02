@@ -1,7 +1,9 @@
 package com.example.playlistmaker
 
 enum class TrackSearchStatus {
-    Success
-    , NoDataFound
-    , ConnectionError
+    Success  // Успех
+    , NoDataFound // Не нашли
+    , ConnectionError // Ошибка
+    , ShowHistory // История
+    , Empty // Пусто
 }
