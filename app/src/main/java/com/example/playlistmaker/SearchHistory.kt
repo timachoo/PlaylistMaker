@@ -33,7 +33,7 @@ class SearchHistory {
             wright()
         }
 
-        fun wright(){
+        private fun wright(){
             val json = Gson().toJson(historyTrackList)
             App.applicationPrefs.edit()
                 .putString(HISTORY_TRACK_LIST, json)
