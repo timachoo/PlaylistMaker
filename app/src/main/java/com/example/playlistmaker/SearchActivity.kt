@@ -30,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
     private val iTunesService = retrofit.create(iTunesAPI::class.java)
     private val trackList = ArrayList<Track>()
     private val adapter = TrackAdapter()
-    private var tempText = ""
+    private var searchHistoryList = ArrayList<Track>()
 
     private lateinit var inputEditText: EditText
     private lateinit var recyclerView: RecyclerView
@@ -75,14 +75,16 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.setText("")
             val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
+            searchHistoryList = SearchHistory.fill()
             viewResult(
-                if (SearchHistory.historyTrackList.size > 0)
+                if (searchHistoryList.size > 0)
                     TrackSearchStatus.ShowHistory
                 else TrackSearchStatus.Empty
             )
         }
 
         btnClearHistory.setOnClickListener {
+            searchHistoryList.clear()
             SearchHistory.clear()
             viewResult(TrackSearchStatus.Empty)
         }
@@ -102,10 +104,10 @@ class SearchActivity : AppCompatActivity() {
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
-        SearchHistory.fill()
+        searchHistoryList = SearchHistory.fill()
         recyclerView.adapter = adapter
         viewResult(
-            if (SearchHistory.historyTrackList.size > 0)
+            if (searchHistoryList.size > 0)
                 TrackSearchStatus.ShowHistory
             else TrackSearchStatus.Empty
         )
@@ -170,7 +172,7 @@ class SearchActivity : AppCompatActivity() {
                 recyclerView.visibility = View.VISIBLE
                 historySearchText.visibility = View.VISIBLE
                 btnClearHistory.visibility = View.VISIBLE
-                adapter.trackList = SearchHistory.historyTrackList
+                adapter.trackList = searchHistoryList
                 adapter.notifyDataSetChanged()
             }
         }
