@@ -125,7 +125,7 @@
         android:backgroundTint="?attr/colorOnPrimary"
         android:textColor="?attr/colorPrimaryVariant"
         android:textAllCaps="false"
-        android:fontFamily="@font/ys_display_regular"
+        android:fontFamily="@font/ys_display_medium"
         android:layout_gravity="center"
         android:visibility="visible"/>
 </LinearLayout>
