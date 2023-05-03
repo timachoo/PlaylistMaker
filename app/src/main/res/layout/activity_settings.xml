@@ -22,7 +22,7 @@
             android:id="@+id/themeSwitcher"
             android:theme="@style/SCBSwitch"
             style="@style/SettingsMenuTextStyle"
-            android:text="Темная тема"
+            android:text="@string/black_theme"
             android:layout_gravity="start"
             android:layout_width="match_parent"
             android:layout_height="@dimen/menu_layout_width"/>
