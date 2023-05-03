@@ -9,6 +9,7 @@ class SearchHistory {
 
         var historyTrackList = ArrayList<Track>()
         const val HISTORY_TRACK_LIST = "key_for_history_track_list"
+        const val MAX_HISTORY_SIZE = 10
 
         fun fill() {
             val json = App.applicationPrefs.getString(HISTORY_TRACK_LIST, null)
@@ -24,7 +25,7 @@ class SearchHistory {
                     historyTrackList.remove(t)
                 }
             }
-            if(historyTrackList.size >= 10) {
+            if(historyTrackList.size >= MAX_HISTORY_SIZE) {
                 historyTrackList.removeAt(historyTrackList.size - 1)
             }
 
