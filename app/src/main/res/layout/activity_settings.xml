@@ -18,27 +18,14 @@
         android:orientation="vertical"
         android:layout_marginTop="@dimen/content_margin">
 
-        <FrameLayout
-            android:id="@+id/settings_theme"
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/themeSwitcher"
+            android:theme="@style/SCBSwitch"
+            style="@style/SettingsMenuTextStyle"
+            android:text="@string/black_theme"
+            android:layout_gravity="start"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/menu_layout_width">
-
-            <TextView
-                style="@style/SettingsMenuTextStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:gravity="center"
-                android:text="@string/black_theme"/>
-
-            <Switch
-                android:id="@+id/settings_theme_switch"
-                android:theme="@style/SCBSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"/>
-
-        </FrameLayout>
+            android:layout_height="@dimen/menu_layout_width"/>
 
         <FrameLayout
             android:id="@+id/settings_share"

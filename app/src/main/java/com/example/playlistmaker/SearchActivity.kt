@@ -30,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
     private val iTunesService = retrofit.create(iTunesAPI::class.java)
     private val trackList = ArrayList<Track>()
     private val adapter = TrackAdapter()
-    private var tempText = ""
+    private var searchHistoryList = ArrayList<Track>()
 
     private lateinit var inputEditText: EditText
     private lateinit var recyclerView: RecyclerView
@@ -39,6 +39,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var statusCaption: TextView
     private lateinit var statusAddText: TextView
     private lateinit var btnReload: Button
+    private lateinit var historySearchText: TextView
+    private lateinit var btnClearHistory: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,9 @@ class SearchActivity : AppCompatActivity() {
         statusCaption = findViewById<TextView>(R.id.status_caption)
         statusAddText = findViewById<TextView>(R.id.status_add_text)
         btnReload = findViewById<Button>(R.id.reload_btn)
+        historySearchText = findViewById<TextView>(R.id.history_search_text)
+        btnClearHistory = findViewById<Button>(R.id.clear_history_btn)
+        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
 
         btnReload.setOnClickListener {
             iTunesSearch()
@@ -70,6 +75,18 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.setText("")
             val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
+            searchHistoryList = SearchHistory.fill()
+            viewResult(
+                if (searchHistoryList.size > 0)
+                    TrackSearchStatus.ShowHistory
+                else TrackSearchStatus.Empty
+            )
+        }
+
+        btnClearHistory.setOnClickListener {
+            searchHistoryList.clear()
+            SearchHistory.clear()
+            viewResult(TrackSearchStatus.Empty)
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -86,9 +103,14 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        adapter.trackList = trackList
+
+        searchHistoryList = SearchHistory.fill()
         recyclerView.adapter = adapter
+        viewResult(
+            if (searchHistoryList.size > 0)
+                TrackSearchStatus.ShowHistory
+            else TrackSearchStatus.Empty
+        )
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -97,23 +119,33 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
     }
     private fun clearButtonVisibility(s: CharSequence?): Int {
         if (s.isNullOrEmpty()) {
             trackList.clear()
-            adapter.notifyDataSetChanged()
-            viewSearchResult(TrackSearchStatus.Success)
+            viewResult(TrackSearchStatus.Success)
             return View.GONE
         } else {
             return View.VISIBLE
         }
     }
 
-    private fun viewSearchResult(status : TrackSearchStatus) {
+    private fun viewResult(status : TrackSearchStatus) {
         when (status) {
+            TrackSearchStatus.Empty -> {
+                statusLayout.visibility = View.GONE
+                recyclerView.visibility = View.GONE
+                historySearchText.visibility = View.GONE
+                btnClearHistory.visibility = View.GONE
+            }
             TrackSearchStatus.Success -> {
                 statusLayout.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
+                historySearchText.visibility = View.GONE
+                btnClearHistory.visibility = View.GONE
+                adapter.trackList = trackList
+                adapter.notifyDataSetChanged()
             }
             TrackSearchStatus.NoDataFound -> {
                 statusLayout.visibility = View.VISIBLE
@@ -122,6 +154,8 @@ class SearchActivity : AppCompatActivity() {
                 statusAddText.visibility = View.GONE
                 btnReload.visibility = View.GONE
                 statusCaption.setText(R.string.no_data_found)
+                historySearchText.visibility = View.GONE
+                btnClearHistory.visibility = View.GONE
             }
             TrackSearchStatus.ConnectionError -> {
                 statusLayout.visibility = View.VISIBLE
@@ -130,6 +164,16 @@ class SearchActivity : AppCompatActivity() {
                 statusAddText.visibility = View.VISIBLE
                 btnReload.visibility = View.VISIBLE
                 statusCaption.setText(R.string.connect_err)
+                historySearchText.visibility = View.GONE
+                btnClearHistory.visibility = View.GONE
+            }
+            TrackSearchStatus.ShowHistory -> {
+                statusLayout.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+                historySearchText.visibility = View.VISIBLE
+                btnClearHistory.visibility = View.VISIBLE
+                adapter.trackList = searchHistoryList
+                adapter.notifyDataSetChanged()
             }
         }
     }
@@ -148,17 +192,17 @@ class SearchActivity : AppCompatActivity() {
                             adapter.notifyDataSetChanged()
                         }
                         if (trackList.isEmpty()) {
-                            viewSearchResult(TrackSearchStatus.NoDataFound)
+                            viewResult(TrackSearchStatus.NoDataFound)
                         } else {
-                            viewSearchResult(TrackSearchStatus.Success)
+                            viewResult(TrackSearchStatus.Success)
                         }
                     } else {
-                        viewSearchResult(TrackSearchStatus.ConnectionError)
+                        viewResult(TrackSearchStatus.ConnectionError)
                     }
                 }
 
                 override fun onFailure(call: Call<TrackResponce>, t: Throwable) {
-                    viewSearchResult(TrackSearchStatus.ConnectionError)
+                    viewResult(TrackSearchStatus.ConnectionError)
                 }
 
             })

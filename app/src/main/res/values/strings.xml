@@ -12,6 +12,7 @@
     <string name="support">Написать в поддержку</string>
     <string name="user_agreement">Пользовательское соглашение</string>
     <string name="reload">Обновить</string>
+    <string name="clear_history">Очистить историю</string>
 
     <!-- Default text -->
     <string name="default_theme">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
@@ -22,4 +23,5 @@
     <string name="no_data_found">Ничего не нашлось</string>
     <string name="connect_err">Проблемы со связью</string>
     <string name="connect_descr">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="search_text">Вы искали</string>
 </resources>

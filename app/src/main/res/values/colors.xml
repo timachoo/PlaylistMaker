@@ -17,7 +17,7 @@
     <color name="icon_default_color">#AEAFB4</color>
 
     <!--Switch-->
-    <color name="enable_thumb_green">#46bdbf</color>
-    <color name="disable_thumb_gray">#f1f1f1</color>
+    <color name="enable_thumb">#3772E7</color>
+    <color name="disable_thumb">#f1f1f1</color>
     <color name="thumb_foreground">#42221f1f</color>
 </resources>
