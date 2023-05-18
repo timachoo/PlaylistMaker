@@ -64,7 +64,7 @@ class PlayerActivity  : AppCompatActivity() {
             trackNameView.setText(track.trackName)
             artistNameView.setText(track.artistName)
             trackTimeView.setText(SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis))
-            if (!track.collectionName.isNullOrEmpty()){
+            if (!track.collectionName.isEmpty()){
                 collectionNameView.visibility = View.VISIBLE
                 collectionNameCaptionView.visibility = View.VISIBLE
                 collectionNameView.setText(track.collectionName)
@@ -72,7 +72,7 @@ class PlayerActivity  : AppCompatActivity() {
                 collectionNameView.visibility = View.GONE
                 collectionNameCaptionView.visibility = View.GONE
             }
-            if (!track.releaseDate.isNullOrEmpty()) {
+            if (!track.releaseDate.isEmpty()) {
                 var date = LocalDate.parse(track.releaseDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZZZZZ"))
                 releaseDateView.setText(date.year.toString())
             }
