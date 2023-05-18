@@ -10,7 +10,7 @@
     <dimen name="search_padding">40dp</dimen>
     <dimen name="player_basic_margin">24dp</dimen>
     <dimen name="player_add_margin">16dp</dimen>
-    <dimen name="player_table_margin">9dp</dimen>
+    <dimen name="player_table_margin">17dp</dimen>
 
     <!-- Text -->
     <dimen name="header_text_size">22sp</dimen>
