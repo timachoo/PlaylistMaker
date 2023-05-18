@@ -5,7 +5,4 @@
         <item name="android:textSize">11sp</item>
         <item name="android:tint">@color/white</item>
     </style>
-    <style name="BackgroundColor">
-        <item name="android:background">@color/black</item>
-    </style>
 </resources>

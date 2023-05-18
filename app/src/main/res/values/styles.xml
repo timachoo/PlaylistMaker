@@ -46,7 +46,4 @@
     <style name="PlayerValFont" parent="@style/PlayerTextFont">
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
-    <style name="BackgroundColor">
-        <item name="android:background">@color/white</item>
-    </style>
 </resources>
