@@ -14,10 +14,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class PlayerActivity  : AppCompatActivity() {
-    companion object{
-        const val TRACK_KEY = "track_key"
-    }
-
     private lateinit var trackNameView: TextView
     private lateinit var artistNameView: TextView
     private lateinit var trackTimeView: TextView
@@ -80,5 +76,9 @@ class PlayerActivity  : AppCompatActivity() {
             countryView.setText(track.country)
         }
 
+    }
+
+    companion object{
+        const val TRACK_KEY = "track_key"
     }
 }
