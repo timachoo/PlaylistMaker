@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/player_basic_margin"
-                android:layout_marginTop="46dp"
+                android:layout_marginTop="26dp"
                 android:layout_marginEnd="@dimen/player_basic_margin"
                 android:src="@drawable/placeholder_big"
                 app:layout_constraintEnd_toEndOf="parent"
