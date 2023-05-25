@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val iTunesService = retrofit.create(iTunesAPI::class.java)
     private val trackList = ArrayList<Track>()
-    private val adapter = TrackAdapter()
+    private lateinit var adapter: TrackAdapter
     private var searchHistoryList = ArrayList<Track>()
 
     private lateinit var inputEditText: EditText
@@ -105,6 +106,13 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
         searchHistoryList = SearchHistory.fill()
+        adapter = TrackAdapter(){
+                it: Track ->
+                    SearchHistory.add(it)
+                    val displayIntent = Intent(this, PlayerActivity::class.java)
+                    displayIntent.putExtra(PlayerActivity.TRACK_KEY, Gson().toJson(it))
+                    startActivity(displayIntent)
+        }
         recyclerView.adapter = adapter
         viewResult(
             if (searchHistoryList.size > 0)

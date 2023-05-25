@@ -8,6 +8,9 @@
     <dimen name="content_margin">16dp</dimen>
     <dimen name="menu_layout_width">60dp</dimen>
     <dimen name="search_padding">40dp</dimen>
+    <dimen name="player_basic_margin">24dp</dimen>
+    <dimen name="player_add_margin">16dp</dimen>
+    <dimen name="player_table_margin">17dp</dimen>
 
     <!-- Text -->
     <dimen name="header_text_size">22sp</dimen>
@@ -23,4 +26,7 @@
     <dimen name="ua_icon_width">8dp</dimen>
     <dimen name="icon_width">20dp</dimen>
     <dimen name="icon_height">18dp</dimen>
+
+    <!-- Images -->
+    <dimen name="big_image_radius">8dp</dimen>
 </resources>
