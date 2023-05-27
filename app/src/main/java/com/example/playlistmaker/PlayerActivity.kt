@@ -1,7 +1,11 @@
 package com.example.playlistmaker
 
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +27,14 @@ class PlayerActivity  : AppCompatActivity() {
     private lateinit var primaryGenreNameView: TextView
     private lateinit var countryView: TextView
     private lateinit var trackImageView: ImageView
+    private lateinit var btnPlay: ImageButton
+    private lateinit var playTimeView: TextView
+    private lateinit var track:Track
+
+    private var playerState = PlayerStatus.Default
+    private var mediaPlayer = MediaPlayer()
+    private var handler = Handler(Looper.getMainLooper())
+    private var isFinised = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +48,6 @@ class PlayerActivity  : AppCompatActivity() {
         }
 
         val json = intent.extras?.getString(TRACK_KEY)
-        val track:Track
 
         if (!json.isNullOrEmpty()) {
             track = Gson().fromJson(json, Track::class.java)
@@ -50,6 +61,8 @@ class PlayerActivity  : AppCompatActivity() {
             primaryGenreNameView = findViewById<TextView>(R.id.primaryGenreName)
             countryView = findViewById<TextView>(R.id.country)
             trackImageView = findViewById<ImageView>(R.id.trackImage)
+            btnPlay = findViewById<ImageButton>(R.id.play)
+            playTimeView = findViewById<TextView>(R.id.playTime)
 
             Glide.with(trackImageView).load(track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
                 .placeholder(R.drawable.placeholder_big)
@@ -74,11 +87,94 @@ class PlayerActivity  : AppCompatActivity() {
             }
             primaryGenreNameView.setText(track.primaryGenreName)
             countryView.setText(track.country)
+
+            playTimeView.setText("00:00")
+
+            btnPlay.setOnClickListener {
+                playbackControl()
+            }
+            if (!track.previewUrl.isEmpty()) {
+                preparePlayer(track.previewUrl)
+            }
         }
 
     }
 
+    private fun preparePlayer(url : String) {
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playerState = PlayerStatus.Prepared
+        }
+        mediaPlayer.setOnCompletionListener {
+            btnPlay.setImageResource(R.drawable.play)
+            playerState = PlayerStatus.Prepared
+            playTimeView.setText("00:00")
+            isFinised = true
+        }
+    }
+
+    private fun startPlayer() {
+        if (!track.previewUrl.isEmpty()) {
+            mediaPlayer.start()
+            btnPlay.setImageResource(R.drawable.pause)
+            playerState = PlayerStatus.Playing
+            playTimeView.setText("00:01")
+            handler.post(
+                createUpdateTimerTask()
+            )
+            isFinised = false
+        }
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        btnPlay.setImageResource(R.drawable.play)
+        playerState = PlayerStatus.Paused
+    }
+
+    private fun playbackControl() {
+        when(playerState) {
+            PlayerStatus.Playing -> {
+                pausePlayer()
+            }
+            PlayerStatus.Prepared, PlayerStatus.Paused -> {
+                startPlayer()
+            }
+            else -> {
+                pausePlayer()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
+
+    private fun createUpdateTimerTask(): Runnable {
+        return object : Runnable {
+            override fun run() {
+                if (!isFinised) {
+                    playTimeView.setText(
+                        SimpleDateFormat("mm:ss", Locale.getDefault()).format(
+                            mediaPlayer.currentPosition
+                        )
+                    )
+
+                    handler.postDelayed(this, DELAY)
+                }
+            }
+        }
+    }
+
     companion object{
         const val TRACK_KEY = "track_key"
+        private const val DELAY = 1000L
     }
 }
