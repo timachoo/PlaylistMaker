@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -22,6 +24,7 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
     private val iTunesBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -42,6 +45,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var btnReload: Button
     private lateinit var historySearchText: TextView
     private lateinit var btnClearHistory: Button
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { iTunesSearch() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,6 +133,19 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
+        inputEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                searchDebounce()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+        })
 
     }
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -220,5 +239,10 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_TEXT, inputEditText.text.toString())
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 }
