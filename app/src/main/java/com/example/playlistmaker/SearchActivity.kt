@@ -45,6 +45,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var btnReload: Button
     private lateinit var historySearchText: TextView
     private lateinit var btnClearHistory: Button
+    private lateinit var progresBar: ProgressBar
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { iTunesSearch() }
@@ -60,6 +61,7 @@ class SearchActivity : AppCompatActivity() {
         historySearchText = findViewById<TextView>(R.id.history_search_text)
         btnClearHistory = findViewById<Button>(R.id.clear_history_btn)
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        progresBar = findViewById<ProgressBar>(R.id.progressBar)
 
         btnReload.setOnClickListener {
             iTunesSearch()
@@ -165,6 +167,7 @@ class SearchActivity : AppCompatActivity() {
                 recyclerView.visibility = View.GONE
                 historySearchText.visibility = View.GONE
                 btnClearHistory.visibility = View.GONE
+                progresBar.visibility = View.GONE
             }
             TrackSearchStatus.Success -> {
                 statusLayout.visibility = View.GONE
@@ -173,6 +176,7 @@ class SearchActivity : AppCompatActivity() {
                 btnClearHistory.visibility = View.GONE
                 adapter.trackList = trackList
                 adapter.notifyDataSetChanged()
+                progresBar.visibility = View.GONE
             }
             TrackSearchStatus.NoDataFound -> {
                 statusLayout.visibility = View.VISIBLE
@@ -183,6 +187,7 @@ class SearchActivity : AppCompatActivity() {
                 statusCaption.setText(R.string.no_data_found)
                 historySearchText.visibility = View.GONE
                 btnClearHistory.visibility = View.GONE
+                progresBar.visibility = View.GONE
             }
             TrackSearchStatus.ConnectionError -> {
                 statusLayout.visibility = View.VISIBLE
@@ -193,20 +198,32 @@ class SearchActivity : AppCompatActivity() {
                 statusCaption.setText(R.string.connect_err)
                 historySearchText.visibility = View.GONE
                 btnClearHistory.visibility = View.GONE
+                progresBar.visibility = View.GONE
             }
             TrackSearchStatus.ShowHistory -> {
                 statusLayout.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
                 historySearchText.visibility = View.VISIBLE
                 btnClearHistory.visibility = View.VISIBLE
+                progresBar.visibility = View.GONE
                 adapter.trackList = searchHistoryList
                 adapter.notifyDataSetChanged()
+            }
+            TrackSearchStatus.Progress -> {
+                statusLayout.visibility = View.GONE
+                recyclerView.visibility = View.GONE
+                historySearchText.visibility = View.GONE
+                btnClearHistory.visibility = View.GONE
+                progresBar.visibility = View.VISIBLE
             }
         }
     }
 
     private fun iTunesSearch(){
         if (inputEditText.text.isNotEmpty()){
+
+            viewResult(TrackSearchStatus.Progress)
+
             iTunesService.search(inputEditText.text.toString()).enqueue(object :
                 Callback<TrackResponce> {
                 override fun onResponse(call: Call<TrackResponce>,

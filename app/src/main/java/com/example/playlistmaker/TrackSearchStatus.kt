@@ -6,4 +6,5 @@ enum class TrackSearchStatus {
     , ConnectionError // Ошибка
     , ShowHistory // История
     , Empty // Пусто
+    , Progress // Ожидание
 }
