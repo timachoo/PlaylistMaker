@@ -34,7 +34,7 @@ class PlayerActivity  : AppCompatActivity() {
     private var playerState = PlayerStatus.Default
     private var mediaPlayer = MediaPlayer()
     private var handler = Handler(Looper.getMainLooper())
-    private var isFinised = false
+    private lateinit var setTextRunnable : Runnable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,6 +96,16 @@ class PlayerActivity  : AppCompatActivity() {
             if (!track.previewUrl.isEmpty()) {
                 preparePlayer(track.previewUrl)
             }
+
+            setTextRunnable = Runnable {
+                    playTimeView.setText(
+                        SimpleDateFormat("mm:ss", Locale.getDefault()).format(
+                            mediaPlayer.currentPosition
+                        )
+                    )
+                    handler.postDelayed(setTextRunnable, DELAY)
+            }
+
         }
 
     }
@@ -110,7 +120,9 @@ class PlayerActivity  : AppCompatActivity() {
             btnPlay.setImageResource(R.drawable.play)
             playerState = PlayerStatus.Prepared
             playTimeView.setText("00:00")
-            isFinised = true
+            if(setTextRunnable != null) {
+                handler.removeCallbacks(setTextRunnable)
+            }
         }
     }
 
@@ -120,10 +132,7 @@ class PlayerActivity  : AppCompatActivity() {
             btnPlay.setImageResource(R.drawable.pause)
             playerState = PlayerStatus.Playing
             playTimeView.setText("00:01")
-            handler.post(
-                createUpdateTimerTask()
-            )
-            isFinised = false
+            handler.post(setTextRunnable)
         }
     }
 
@@ -154,22 +163,12 @@ class PlayerActivity  : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+        }
         mediaPlayer.release()
-    }
-
-    private fun createUpdateTimerTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (!isFinised) {
-                    playTimeView.setText(
-                        SimpleDateFormat("mm:ss", Locale.getDefault()).format(
-                            mediaPlayer.currentPosition
-                        )
-                    )
-
-                    handler.postDelayed(this, DELAY)
-                }
-            }
+        if(setTextRunnable != null) {
+            handler.removeCallbacks(setTextRunnable)
         }
     }
 
