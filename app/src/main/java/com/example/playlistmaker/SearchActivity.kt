@@ -21,11 +21,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
-
-    companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
     private val iTunesBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseUrl)
@@ -35,6 +30,7 @@ class SearchActivity : AppCompatActivity() {
     private val trackList = ArrayList<Track>()
     private lateinit var adapter: TrackAdapter
     private var searchHistoryList = ArrayList<Track>()
+    private var isClickAllowed = true
 
     private lateinit var inputEditText: EditText
     private lateinit var recyclerView: RecyclerView
@@ -49,6 +45,7 @@ class SearchActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { iTunesSearch() }
+    private val clickAllowRunnable = Runnable { isClickAllowed = true }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,15 +78,18 @@ class SearchActivity : AppCompatActivity() {
         val clearButton = findViewById<ImageView>(R.id.removeBtn)
 
         clearButton.setOnClickListener {
-            inputEditText.setText("")
-            val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
-            searchHistoryList = SearchHistory.fill()
-            viewResult(
-                if (searchHistoryList.size > 0)
-                    TrackSearchStatus.ShowHistory
-                else TrackSearchStatus.Empty
-            )
+            if (clickDebounce()) {
+                inputEditText.setText("")
+                val imm: InputMethodManager =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
+                searchHistoryList = SearchHistory.fill()
+                viewResult(
+                    if (searchHistoryList.size > 0)
+                        TrackSearchStatus.ShowHistory
+                    else TrackSearchStatus.Empty
+                )
+            }
         }
 
         btnClearHistory.setOnClickListener {
@@ -269,5 +269,24 @@ class SearchActivity : AppCompatActivity() {
         if(searchRunnable != null) {
             handler.removeCallbacks(searchRunnable)
         }
+
+        if(clickAllowRunnable != null) {
+            handler.removeCallbacks(clickAllowRunnable)
+        }
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed(clickAllowRunnable, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    companion object {
+        const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
