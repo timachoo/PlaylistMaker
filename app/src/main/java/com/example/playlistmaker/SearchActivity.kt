@@ -78,18 +78,16 @@ class SearchActivity : AppCompatActivity() {
         val clearButton = findViewById<ImageView>(R.id.removeBtn)
 
         clearButton.setOnClickListener {
-            if (clickDebounce()) {
-                inputEditText.setText("")
-                val imm: InputMethodManager =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
-                searchHistoryList = SearchHistory.fill()
-                viewResult(
-                    if (searchHistoryList.size > 0)
-                        TrackSearchStatus.ShowHistory
-                    else TrackSearchStatus.Empty
-                )
-            }
+            inputEditText.setText("")
+            val imm: InputMethodManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
+            searchHistoryList = SearchHistory.fill()
+            viewResult(
+                if (searchHistoryList.size > 0)
+                    TrackSearchStatus.ShowHistory
+                else TrackSearchStatus.Empty
+            )
         }
 
         btnClearHistory.setOnClickListener {
@@ -116,10 +114,12 @@ class SearchActivity : AppCompatActivity() {
         searchHistoryList = SearchHistory.fill()
         adapter = TrackAdapter(){
                 it: Track ->
+                if (clickDebounce()) {
                     SearchHistory.add(it)
                     val displayIntent = Intent(this, PlayerActivity::class.java)
                     displayIntent.putExtra(PlayerActivity.TRACK_KEY, Gson().toJson(it))
                     startActivity(displayIntent)
+                }
         }
         recyclerView.adapter = adapter
         viewResult(
