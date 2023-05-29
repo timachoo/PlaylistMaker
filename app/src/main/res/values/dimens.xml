@@ -26,6 +26,7 @@
     <dimen name="ua_icon_width">8dp</dimen>
     <dimen name="icon_width">20dp</dimen>
     <dimen name="icon_height">18dp</dimen>
+    <dimen name="progress_bar_size">44dp</dimen>
 
     <!-- Images -->
     <dimen name="big_image_radius">8dp</dimen>
