@@ -131,7 +131,6 @@ class PlayerActivity  : AppCompatActivity() {
             mediaPlayer.start()
             btnPlay.setImageResource(R.drawable.pause)
             playerState = PlayerStatus.Playing
-            playTimeView.setText("00:01")
             handler.post(setTextRunnable)
         }
     }
