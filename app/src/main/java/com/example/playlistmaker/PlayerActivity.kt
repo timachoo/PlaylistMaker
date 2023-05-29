@@ -103,7 +103,7 @@ class PlayerActivity  : AppCompatActivity() {
                             mediaPlayer.currentPosition
                         )
                     )
-                    handler.postDelayed(setTextRunnable, DELAY)
+                    handler.postDelayed(setTextRunnable, DELAY_MILLIS)
             }
 
         }
@@ -174,6 +174,6 @@ class PlayerActivity  : AppCompatActivity() {
 
     companion object{
         const val TRACK_KEY = "track_key"
-        private const val DELAY = 1000L
+        private const val DELAY_MILLIS = 1000L
     }
 }

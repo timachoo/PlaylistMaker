@@ -260,7 +260,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
     }
 
     override fun onDestroy() {
@@ -279,14 +279,14 @@ class SearchActivity : AppCompatActivity() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed(clickAllowRunnable, CLICK_DEBOUNCE_DELAY)
+            handler.postDelayed(clickAllowRunnable, CLICK_DEBOUNCE_DELAY_MILLIS)
         }
         return current
     }
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }
