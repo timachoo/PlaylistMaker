@@ -262,4 +262,12 @@ class SearchActivity : AppCompatActivity() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if(searchRunnable != null) {
+            handler.removeCallbacks(searchRunnable)
+        }
+    }
 }
