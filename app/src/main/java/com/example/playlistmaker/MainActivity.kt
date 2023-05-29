@@ -3,11 +3,9 @@ package com.example.playlistmaker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,5 +32,12 @@ class MainActivity : AppCompatActivity() {
             val displayIntent = Intent(this, SettingsActivity::class.java)
             startActivity(displayIntent)
         }
+    }
+
+    companion object {
+        fun convertMillisToString(millis : Int) : String {
+            return SimpleDateFormat("mm:ss", Locale.getDefault()).format(millis)
+        }
+
     }
 }

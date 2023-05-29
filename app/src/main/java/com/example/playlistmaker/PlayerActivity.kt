@@ -72,7 +72,7 @@ class PlayerActivity  : AppCompatActivity() {
 
             trackNameView.setText(track.trackName)
             artistNameView.setText(track.artistName)
-            trackTimeView.setText(SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis))
+            trackTimeView.setText(MainActivity.convertMillisToString(track.trackTimeMillis))
             if (!track.collectionName.isEmpty()){
                 collectionNameView.visibility = View.VISIBLE
                 collectionNameCaptionView.visibility = View.VISIBLE
@@ -98,11 +98,7 @@ class PlayerActivity  : AppCompatActivity() {
             }
 
             setTextRunnable = Runnable {
-                    playTimeView.setText(
-                        SimpleDateFormat("mm:ss", Locale.getDefault()).format(
-                            mediaPlayer.currentPosition
-                        )
-                    )
+                    playTimeView.setText(MainActivity.convertMillisToString(mediaPlayer.currentPosition))
                     handler.postDelayed(setTextRunnable, DELAY_MILLIS)
             }
 
