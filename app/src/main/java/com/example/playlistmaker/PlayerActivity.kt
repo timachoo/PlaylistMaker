@@ -14,8 +14,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import java.text.SimpleDateFormat
-import java.util.*
 
 class PlayerActivity  : AppCompatActivity() {
     private lateinit var trackNameView: TextView
@@ -82,7 +80,7 @@ class PlayerActivity  : AppCompatActivity() {
                 collectionNameCaptionView.visibility = View.GONE
             }
             if (!track.releaseDate.isEmpty()) {
-                var date = LocalDate.parse(track.releaseDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZZZZZ"))
+                val date = LocalDate.parse(track.releaseDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZZZZZ"))
                 releaseDateView.setText(date.year.toString())
             }
             primaryGenreNameView.setText(track.primaryGenreName)
@@ -116,7 +114,7 @@ class PlayerActivity  : AppCompatActivity() {
             btnPlay.setImageResource(R.drawable.play)
             playerState = PlayerStatus.Prepared
             playTimeView.setText(R.string.player_start_position)
-            if(setTextRunnable != null) {
+            if(this::setTextRunnable.isInitialized) {
                 handler.removeCallbacks(setTextRunnable)
             }
         }
