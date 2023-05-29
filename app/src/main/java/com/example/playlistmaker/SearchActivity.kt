@@ -266,13 +266,8 @@ class SearchActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        if(searchRunnable != null) {
-            handler.removeCallbacks(searchRunnable)
-        }
-
-        if(clickAllowRunnable != null) {
-            handler.removeCallbacks(clickAllowRunnable)
-        }
+        handler.removeCallbacks(searchRunnable)
+        handler.removeCallbacks(clickAllowRunnable)
     }
 
     private fun clickDebounce() : Boolean {

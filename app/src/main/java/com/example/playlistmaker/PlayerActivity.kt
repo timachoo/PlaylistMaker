@@ -162,7 +162,7 @@ class PlayerActivity  : AppCompatActivity() {
             mediaPlayer.stop()
         }
         mediaPlayer.release()
-        if(setTextRunnable != null) {
+        if(this::setTextRunnable.isInitialized) {
             handler.removeCallbacks(setTextRunnable)
         }
     }
