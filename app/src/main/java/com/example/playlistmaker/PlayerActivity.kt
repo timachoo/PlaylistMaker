@@ -88,7 +88,7 @@ class PlayerActivity  : AppCompatActivity() {
             primaryGenreNameView.setText(track.primaryGenreName)
             countryView.setText(track.country)
 
-            playTimeView.setText("00:00")
+            playTimeView.setText(R.string.player_start_position)
 
             btnPlay.setOnClickListener {
                 playbackControl()
@@ -119,7 +119,7 @@ class PlayerActivity  : AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             btnPlay.setImageResource(R.drawable.play)
             playerState = PlayerStatus.Prepared
-            playTimeView.setText("00:00")
+            playTimeView.setText(R.string.player_start_position)
             if(setTextRunnable != null) {
                 handler.removeCallbacks(setTextRunnable)
             }
