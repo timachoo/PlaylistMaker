@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 class TrackAdapter(
     private var onItemClicked: ((movie: Track) -> Unit)
 ) : RecyclerView.Adapter<TrackViewHolder> () {
-
     var trackList = ArrayList<Track>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {

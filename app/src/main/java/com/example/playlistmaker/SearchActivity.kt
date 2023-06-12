@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -19,10 +21,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
-
-    companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
-    }
     private val iTunesBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseUrl)
@@ -32,6 +30,7 @@ class SearchActivity : AppCompatActivity() {
     private val trackList = ArrayList<Track>()
     private lateinit var adapter: TrackAdapter
     private var searchHistoryList = ArrayList<Track>()
+    private var isClickAllowed = true
 
     private lateinit var inputEditText: EditText
     private lateinit var recyclerView: RecyclerView
@@ -42,6 +41,11 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var btnReload: Button
     private lateinit var historySearchText: TextView
     private lateinit var btnClearHistory: Button
+    private lateinit var progresBar: ProgressBar
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { iTunesSearch() }
+    private val clickAllowRunnable = Runnable { isClickAllowed = true }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +58,7 @@ class SearchActivity : AppCompatActivity() {
         historySearchText = findViewById<TextView>(R.id.history_search_text)
         btnClearHistory = findViewById<Button>(R.id.clear_history_btn)
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        progresBar = findViewById<ProgressBar>(R.id.progressBar)
 
         btnReload.setOnClickListener {
             iTunesSearch()
@@ -74,7 +79,8 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
-            val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm: InputMethodManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
             searchHistoryList = SearchHistory.fill()
             viewResult(
@@ -108,10 +114,12 @@ class SearchActivity : AppCompatActivity() {
         searchHistoryList = SearchHistory.fill()
         adapter = TrackAdapter(){
                 it: Track ->
+                if (clickDebounce()) {
                     SearchHistory.add(it)
                     val displayIntent = Intent(this, PlayerActivity::class.java)
                     displayIntent.putExtra(PlayerActivity.TRACK_KEY, Gson().toJson(it))
                     startActivity(displayIntent)
+                }
         }
         recyclerView.adapter = adapter
         viewResult(
@@ -123,10 +131,22 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 iTunesSearch()
-                true
             }
             false
         }
+
+        inputEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                searchDebounce()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+        })
 
     }
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -146,6 +166,7 @@ class SearchActivity : AppCompatActivity() {
                 recyclerView.visibility = View.GONE
                 historySearchText.visibility = View.GONE
                 btnClearHistory.visibility = View.GONE
+                progresBar.visibility = View.GONE
             }
             TrackSearchStatus.Success -> {
                 statusLayout.visibility = View.GONE
@@ -154,6 +175,7 @@ class SearchActivity : AppCompatActivity() {
                 btnClearHistory.visibility = View.GONE
                 adapter.trackList = trackList
                 adapter.notifyDataSetChanged()
+                progresBar.visibility = View.GONE
             }
             TrackSearchStatus.NoDataFound -> {
                 statusLayout.visibility = View.VISIBLE
@@ -164,6 +186,7 @@ class SearchActivity : AppCompatActivity() {
                 statusCaption.setText(R.string.no_data_found)
                 historySearchText.visibility = View.GONE
                 btnClearHistory.visibility = View.GONE
+                progresBar.visibility = View.GONE
             }
             TrackSearchStatus.ConnectionError -> {
                 statusLayout.visibility = View.VISIBLE
@@ -174,20 +197,32 @@ class SearchActivity : AppCompatActivity() {
                 statusCaption.setText(R.string.connect_err)
                 historySearchText.visibility = View.GONE
                 btnClearHistory.visibility = View.GONE
+                progresBar.visibility = View.GONE
             }
             TrackSearchStatus.ShowHistory -> {
                 statusLayout.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
                 historySearchText.visibility = View.VISIBLE
                 btnClearHistory.visibility = View.VISIBLE
+                progresBar.visibility = View.GONE
                 adapter.trackList = searchHistoryList
                 adapter.notifyDataSetChanged()
+            }
+            TrackSearchStatus.Progress -> {
+                statusLayout.visibility = View.GONE
+                recyclerView.visibility = View.GONE
+                historySearchText.visibility = View.GONE
+                btnClearHistory.visibility = View.GONE
+                progresBar.visibility = View.VISIBLE
             }
         }
     }
 
     private fun iTunesSearch(){
         if (inputEditText.text.isNotEmpty()){
+
+            viewResult(TrackSearchStatus.Progress)
+
             iTunesService.search(inputEditText.text.toString()).enqueue(object :
                 Callback<TrackResponce> {
                 override fun onResponse(call: Call<TrackResponce>,
@@ -220,5 +255,32 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_TEXT, inputEditText.text.toString())
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        handler.removeCallbacks(searchRunnable)
+        handler.removeCallbacks(clickAllowRunnable)
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed(clickAllowRunnable, CLICK_DEBOUNCE_DELAY_MILLIS)
+        }
+        return current
+    }
+
+    companion object {
+        const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }
