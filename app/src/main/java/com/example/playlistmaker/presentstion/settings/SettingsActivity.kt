@@ -15,12 +15,14 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         val btnSettingsBack = findViewById<View>(R.id.settings_back_btn)
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        val btnShare = findViewById<View>(R.id.settings_share)
+        val btnSupport = findViewById<View>(R.id.settings_support)
+        val btnAgreement = findViewById<View>(R.id.settings_agreement)
 
         btnSettingsBack.setOnClickListener {
             finish()
         }
-
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
         if ((applicationContext as App).darkTheme) {
             themeSwitcher.setChecked(true);
@@ -30,16 +32,12 @@ class SettingsActivity : AppCompatActivity() {
             (applicationContext as App).switchTheme(checked)
         }
 
-        val btnShare = findViewById<View>(R.id.settings_share)
-
         btnShare.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.setType("text/plain")
             shareIntent.putExtra(Intent.EXTRA_TEXT, resources.getString(R.string.url_course))
             startActivity(shareIntent)
         }
-
-        val btnSupport = findViewById<View>(R.id.settings_support)
 
         btnSupport.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SENDTO)
@@ -51,8 +49,6 @@ class SettingsActivity : AppCompatActivity() {
                 startActivity(shareIntent)
             }
         }
-
-        val btnAgreement = findViewById<View>(R.id.settings_agreement)
 
         btnAgreement.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_VIEW)

@@ -66,6 +66,8 @@ class SearchActivity : AppCompatActivity() {
         btnClearHistory = findViewById<Button>(R.id.clear_history_btn)
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         progresBar = findViewById<ProgressBar>(R.id.progressBar)
+        val btnBack = findViewById<View>(R.id.search_back_btn)
+        val clearButton = findViewById<ImageView>(R.id.removeBtn)
 
         btnReload.setOnClickListener {
             iTunesSearch()
@@ -76,13 +78,9 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.setText(savedInstanceState.getString(SEARCH_TEXT,""))
         }
 
-        val btnBack = findViewById<View>(R.id.search_back_btn)
-
         btnBack.setOnClickListener {
             finish()
         }
-
-        val clearButton = findViewById<ImageView>(R.id.removeBtn)
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
