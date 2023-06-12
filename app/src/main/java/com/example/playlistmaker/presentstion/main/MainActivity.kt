@@ -1,9 +1,13 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentstion.main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.playlistmaker.R
+import com.example.playlistmaker.presentstion.library.LibraryActivity
+import com.example.playlistmaker.presentstion.search.SearchActivity
+import com.example.playlistmaker.presentstion.settings.SettingsActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
