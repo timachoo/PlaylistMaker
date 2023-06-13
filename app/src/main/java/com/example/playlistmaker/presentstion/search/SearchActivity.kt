@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentstion.search
 
 import android.content.Context
 import android.content.Intent
@@ -13,6 +13,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.SearchHistory
+import com.example.playlistmaker.data.dto.TrackResponce
+import com.example.playlistmaker.data.network.iTunesAPI
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.models.TrackSearchStatus
+import com.example.playlistmaker.presentstion.player.PlayerActivity
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -59,6 +66,8 @@ class SearchActivity : AppCompatActivity() {
         btnClearHistory = findViewById<Button>(R.id.clear_history_btn)
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         progresBar = findViewById<ProgressBar>(R.id.progressBar)
+        val btnBack = findViewById<View>(R.id.search_back_btn)
+        val clearButton = findViewById<ImageView>(R.id.removeBtn)
 
         btnReload.setOnClickListener {
             iTunesSearch()
@@ -69,13 +78,9 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.setText(savedInstanceState.getString(SEARCH_TEXT,""))
         }
 
-        val btnBack = findViewById<View>(R.id.search_back_btn)
-
         btnBack.setOnClickListener {
             finish()
         }
-
-        val clearButton = findViewById<ImageView>(R.id.removeBtn)
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
